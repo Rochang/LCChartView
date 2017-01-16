@@ -8,22 +8,33 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma mark - 代理
+@class LCChartView;
+@protocol LCChartViewDelegate <NSObject>
+
+- (void)chartView:(LCChartView *)chartView didClickpPotsLabel:(NSInteger)index;
+
+@end
+
 typedef NS_ENUM(NSInteger, LCChartViewType) {
     LCChartViewTypeLine,
-    LCChartViewTypeBar
+    LCChartViewTypeBar,
+    LCChartViewTypeLineAndBar
 };
 
 #pragma mark - 数据model
 @interface LCChartViewDataModel : NSObject
 
-@property (strong, nonatomic) UIColor *chartColor;
+@property (strong, nonatomic) UIColor *barColor;
+@property (strong, nonatomic) UIColor *lineColor;
 @property (strong, nonatomic) NSArray <NSString *>*plots;
 @property (strong, nonatomic) NSMutableArray <UIButton *>*plotButtons;
-+ (LCChartViewDataModel *)getModelWithChartColor:(UIColor *)color plots:(NSArray <NSString *>*)plots;
++ (LCChartViewDataModel *)getModelWithLineColor:(UIColor *)lineColor BarColor:(UIColor *)barColor plots:(NSArray<NSString *> *)plots;
 
 @end
 
 @interface LCChartView : UIView
+@property (weak, nonatomic) id <LCChartViewDelegate> delegate;
 
 // switch
 @property (assign, nonatomic) BOOL showGridding;
@@ -97,6 +108,7 @@ typedef NS_ENUM(NSInteger, LCChartViewType) {
 /** 初始化 */
 + (instancetype)getAxisViewLineWithYAxisMaxValue:(CGFloat)yAxisMaxValue;
 + (instancetype)getAxisViewBarWithYAxisMaxValue:(CGFloat)yAxisMaxValue;
++ (instancetype)getAxisViewLineAndBarWithYAxisMaxValue:(CGFloat)yAxisMaxValue;
 
 /** 开始描绘LCChartView */
 - (void)drawChartView;

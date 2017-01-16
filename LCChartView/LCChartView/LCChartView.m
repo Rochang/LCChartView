@@ -41,6 +41,8 @@ static CGFloat xAxisMaxX = 0;
 @property (assign, nonatomic) CGFloat xArrowsToText;
 @property (assign, nonatomic) CGPoint originPoint;
 @property (strong, nonatomic) NSMutableArray <CAShapeLayer *>*shapeLayers;
+@property (strong, nonatomic) CAShapeLayer *lineShapeLayer;
+@property (strong, nonatomic) CAShapeLayer *barShapeLayer;
 
 // response
 @property (strong, nonatomic) UITapGestureRecognizer *twoTap;
@@ -61,6 +63,13 @@ static CGFloat xAxisMaxX = 0;
 + (instancetype)getAxisViewBarWithYAxisMaxValue:(CGFloat)yAxisMaxValue {
     LCChartView *axisView = [[self alloc] init];
     axisView.chartViewType = LCChartViewTypeBar;
+    axisView.yAxisMaxValue = yAxisMaxValue;
+    return axisView;
+}
+
++ (instancetype)getAxisViewLineAndBarWithYAxisMaxValue:(CGFloat)yAxisMaxValue {
+    LCChartView *axisView = [[self alloc] init];
+    axisView.chartViewType = LCChartViewTypeLineAndBar;
     axisView.yAxisMaxValue = yAxisMaxValue;
     return axisView;
 }
@@ -100,7 +109,7 @@ static CGFloat xAxisMaxX = 0;
         NSLog(@"目前LCChartViewTypeBar样式只支持2组数据");
         return;
     }
-    if (self.chartViewType == LCChartViewTypeBar && self.dataSource.count == 2 && (self.xAxisTextMargin < self.barWidth * 2 + 5)) {
+    if ((self.chartViewType == LCChartViewTypeBar || self.chartViewType == LCChartViewTypeLineAndBar) && self.dataSource.count == 2 && (self.xAxisTextMargin < self.barWidth * 2 + 5)) {
         NSLog(@"根据当前设置值可能会造成柱状图显示重叠,默认会设置xAxisTextMargin");
         self.xAxisTextMargin = self.orginXAxisMargin = self.barWidth * 2 + 5;
     }
@@ -127,6 +136,13 @@ static CGFloat xAxisMaxX = 0;
             // 柱状图
         case LCChartViewTypeBar:{
             [self drawBarChartViewBars];
+        }
+            break;
+            // 折线图,柱状图叠加
+        case LCChartViewTypeLineAndBar:{
+            [self drawBarChartViewBars];
+            [self drawLineChartViewPots];
+            [self drawLineChartViewLines];
         }
             break;
             
@@ -260,7 +276,7 @@ static CGFloat xAxisMaxX = 0;
     }
     [self.allSubView addObjectsFromArray:self.xAxisLabels];
     // 处理重叠label
-    [self handleOverlapLabelWithLabels:self.xAxisLabels];
+    [self handleOverlapViewWithViews:self.xAxisLabels];
     // 画轴
     UIBezierPath *xAxisPath = [UIBezierPath bezierPath];
     [xAxisPath moveToPoint:CGPointMake(0, self.originPoint.y)];
@@ -354,32 +370,26 @@ static CGFloat xAxisMaxX = 0;
                 [label addGestureRecognizer:[self tapWithTarget:self action:@selector(plotsLabelDidClick:)]];
             }
             [label sizeToFit];
-            switch (self.chartViewType) {
-                case LCChartViewTypeLine:{
+            if (self.chartViewType == LCChartViewTypeLine) {
+                label.LC_centerX = self.xAxisLabels[j].LC_centerX;
+            }
+            else if (self.chartViewType == LCChartViewTypeLine || self.chartViewType == LCChartViewTypeLineAndBar) {
+                if (self.dataSource.count == 1) {
                     label.LC_centerX = self.xAxisLabels[j].LC_centerX;
-                }
-                    break;
-                case LCChartViewTypeBar:{
-                    if (self.dataSource.count == 1) {
-                        label.LC_centerX = self.xAxisLabels[j].LC_centerX;
-                    } else if (self.dataSource.count == 2) {
-                        if (i == 0) {
-                            label.LC_centerX = self.xAxisLabels[j].LC_centerX - self.barWidth / 2;
-                        } else if (i == 1) {
-                            label.LC_centerX = self.xAxisLabels[j].LC_centerX + self.barWidth / 2;
-                        }
+                } else if (self.dataSource.count == 2) {
+                    if (i == 0) {
+                        label.LC_centerX = self.xAxisLabels[j].LC_centerX - self.barWidth / 2;
+                    } else if (i == 1) {
+                        label.LC_centerX = self.xAxisLabels[j].LC_centerX + self.barWidth / 2;
                     }
                 }
-                    break;
-                default:
-                    break;
             }
             label.LC_bottom = [self getValueHeightWith:value] - self.displayPlotToLabel;
             [self.scrollView addSubview:label];
             [plotLabels addObject:label];
             [self.allSubView addObjectsFromArray:plotLabels];
             // 处理重叠label
-            [self handleOverlapLabelWithLabels:plotLabels];
+            [self handleOverlapViewWithViews:plotLabels];
         }
     }
 }
@@ -387,13 +397,14 @@ static CGFloat xAxisMaxX = 0;
 #pragma mark - 描绘ChartViewLine折线图
 /** 描述折线图数据点 */
 - (void)drawLineChartViewPots {
-    for (LCChartViewDataModel *model in self.dataSource) {
+    for (int i = 0; i < self.dataSource.count; i++) {
+        LCChartViewDataModel *model = self.dataSource[i];
         if (model.plotButtons.count) {
             [model.plotButtons removeAllObjects];
             [model.plotButtons makeObjectsPerformSelector:@selector(removeFromSuperview)];
         }
         // 画点
-        for (int i = 0; i < model.plots.count; i++) {
+        for (int j = 0; j < model.plots.count; j++) {
             // 添加数据点button
             UIButton *button = [self buttonWithFrame:CGRectZero normalImage:nil bgImage:nil target:self action:@selector(plotsButtonDidClick:) normalColor:nil selectcColor:nil backColor:LCClear title:nil fontSize:0];
             if (self.plotsButtonImage.length && self.plotsButtonSelectedImage.length) {
@@ -403,20 +414,32 @@ static CGFloat xAxisMaxX = 0;
                 [button setBackgroundImage:[self imageFromColor:self.plotsButtonColor rect:CGRectMake(0.0f, 0.0f, 1.0f, 1.0f)] forState:UIControlStateNormal];
                 [button setBackgroundImage:[self imageFromColor:self.plotsButtonSelectedColor rect:CGRectMake(0.0f, 0.0f, 1.0f, 1.0f)] forState:UIControlStateSelected];
             }
-            button.tag = i;
+            button.tag = j;
             button.userInteractionEnabled = self.PlotsLabelCanClick;
             button.LC_size = CGSizeMake(self.plotsButtonWH, self.plotsButtonWH);
-            button.center = CGPointMake(self.xAxisLabels[i].LC_centerX, [self getValueHeightWith:model.plots[i]]);
+            // LCChartViewTypeLine
+            if (self.chartViewType == LCChartViewTypeLine || self.dataSource.count == 1) {
+                button.center = CGPointMake(self.xAxisLabels[j].LC_centerX, [self getValueHeightWith:model.plots[j]]);
+                // LCChartViewTypeLineAndBar
+            } else if (self.chartViewType == LCChartViewTypeLineAndBar) {
+                if (i == 0) {
+                    button.center = CGPointMake(self.xAxisLabels[j].LC_centerX - self.barWidth / 2, [self getValueHeightWith:model.plots[j]]);
+                } else if (i == 1) {
+                    button.center = CGPointMake(self.xAxisLabels[j].LC_centerX + self.barWidth / 2, [self getValueHeightWith:model.plots[j]]);
+                }
+            }
             button.layer.cornerRadius = self.plotsButtonWH / 2;
             button.layer.masksToBounds = YES;
             [self.allSubView addObject:button];
             [model.plotButtons addObject:button];
             if (button.userInteractionEnabled) {
-                if (i == 0) {
+                if (j == 0) {
                     [self plotsButtonDidClick:button];
                 }
             }
             [self.scrollView addSubview:button];
+            // 处理重叠点
+            [self handleOverlapViewWithViews:model.plotButtons];
         }
     }
 }
@@ -425,7 +448,6 @@ static CGFloat xAxisMaxX = 0;
 - (void)drawLineChartViewLines {
     for (LCChartViewDataModel *model in self.dataSource) {
         UIBezierPath *lineChartPath = [UIBezierPath bezierPath];
-        CAShapeLayer *shapeLayer = nil;
         // 填充
         if (self.lineChartFillView) {
             [lineChartPath moveToPoint:CGPointMake(model.plotButtons.firstObject.center.x, self.originPoint.y)];
@@ -433,17 +455,17 @@ static CGFloat xAxisMaxX = 0;
                 [lineChartPath addLineToPoint:model.plotButtons[i].center];
             }
             [lineChartPath addLineToPoint:CGPointMake(model.plotButtons.lastObject.center.x, self.originPoint.y)];
-            shapeLayer = [self shapeLayerWithPath:lineChartPath lineWidth:self.lineChartWidth fillColor:self.lineChartFillViewColor strokeColor:model.chartColor];
+            self.lineShapeLayer = [self shapeLayerWithPath:lineChartPath lineWidth:self.lineChartWidth fillColor:self.lineChartFillViewColor strokeColor:model.lineColor];
         } else {
             // 不填充
             [lineChartPath moveToPoint:model.plotButtons.firstObject.center];
             for (int i = 1; i < model.plotButtons.count; i++) {
                 [lineChartPath addLineToPoint:model.plotButtons[i].center];
             }
-            shapeLayer = [self shapeLayerWithPath:lineChartPath lineWidth:self.lineChartWidth fillColor:LCClear strokeColor:model.chartColor];
+            self.lineShapeLayer = [self shapeLayerWithPath:lineChartPath lineWidth:self.lineChartWidth fillColor:LCClear strokeColor:model.lineColor];
         }
-        [self.shapeLayers addObject:shapeLayer];
-        [self.scrollView.layer insertSublayer:shapeLayer atIndex:1];
+        [self.shapeLayers addObject:self.lineShapeLayer];
+        [self.scrollView.layer addSublayer:self.lineShapeLayer];
     }
 }
 
@@ -468,32 +490,31 @@ static CGFloat xAxisMaxX = 0;
                     }
                 }
                     break;
-                    
                 default:
                     break;
             }
             [barPath moveToPoint:CGPointMake(startPointX, self.originPoint.y)];
             [barPath addLineToPoint:CGPointMake(startPointX, [self getValueHeightWith:model.plots[j]])];
-            CAShapeLayer *shapeLayer = [self shapeLayerWithPath:barPath lineWidth:self.barWidth fillColor:model.chartColor strokeColor:model.chartColor];
-            [self.shapeLayers addObject:shapeLayer];
-            [self.scrollView.layer addSublayer:shapeLayer];
+            self.barShapeLayer = [self shapeLayerWithPath:barPath lineWidth:self.barWidth fillColor:model.barColor strokeColor:model.barColor];
+            [self.shapeLayers addObject:self.barShapeLayer];
+            [self.scrollView.layer insertSublayer:self.barShapeLayer below:self.lineShapeLayer];
         }
     }
 }
 
 #pragma mark - private method
 /** 处理label重叠显示的情况 */
-- (void)handleOverlapLabelWithLabels:(NSArray <UILabel *>*)labels {
+- (void)handleOverlapViewWithViews:(NSArray <UIView *>*)views {
     // 如果Label的文字有重叠，那么隐藏
-    UILabel *firstLabel = labels.firstObject;
-    for (int i = 1; i < labels.count; i++) {
-        UILabel *label = labels[i];
-        CGFloat maxX = CGRectGetMaxX(firstLabel.frame);
-        if ((maxX + 3) > label.LC_x) {
-            label.hidden = YES;
+    UIView *firstView = views.firstObject;
+    for (int i = 1; i < views.count; i++) {
+        UIView *view = views[i];
+        CGFloat maxX = CGRectGetMaxX(firstView.frame);
+        if ((maxX + 3) > view.LC_x) {
+            view.hidden = YES;
         }else{
-            label.hidden = NO;
-            firstLabel = label;
+            view.hidden = NO;
+            firstView = view;
         }
     }
 }
@@ -625,11 +646,15 @@ static CGFloat xAxisMaxX = 0;
 #pragma mark - response
 
 - (void)plotsButtonDidClick:(UIButton *)button {
-    
+    if ([_delegate respondsToSelector:@selector(chartView:didClickpPotsLabel:)]) {
+        [_delegate chartView:self didClickpPotsLabel:button.tag];
+    }
 }
 
 - (void)plotsLabelDidClick:(UITapGestureRecognizer *)tap {
-    NSLog(@"%zd",tap.view.tag);
+    if ([_delegate respondsToSelector:@selector(chartView:didClickpPotsLabel:)]) {
+        [_delegate chartView:self didClickpPotsLabel:tap.view.tag];
+    }
 }
 
 #pragma mark - scrollview的手势支持
@@ -760,9 +785,14 @@ static CGFloat xAxisMaxX = 0;
     return self;
 }
 
-+ (LCChartViewDataModel *)getModelWithChartColor:(UIColor *)color plots:(NSArray<NSString *> *)plots {
++ (LCChartViewDataModel *)getModelWithLineColor:(UIColor *)lineColor BarColor:(UIColor *)barColor plots:(NSArray<NSString *> *)plots {
     LCChartViewDataModel *model = [[LCChartViewDataModel alloc] init];
-    model.chartColor = color;
+    if (lineColor) {
+        model.lineColor = lineColor;
+    }
+    if (barColor) {
+        model.barColor = barColor;
+    }
     model.plots = plots;
     return model;
 }

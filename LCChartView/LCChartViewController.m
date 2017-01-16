@@ -22,7 +22,7 @@ static CGFloat margin = 10;
 @interface LCChartViewController ()
 
 @property (strong, nonatomic) LCChartView *axisViewLine;
-@property (strong, nonatomic) LCChartView *axisViewBar;
+@property (strong, nonatomic) LCChartView *axisViewLineAndBar;
 @property (strong, nonatomic) UIButton *resetDataButton;
 
 @end
@@ -35,8 +35,8 @@ static CGFloat margin = 10;
     self.view.backgroundColor = LCBrown119;
     [self setupNavBar];
     [self.view addSubview:self.resetDataButton];
-    [self.view addSubview:self.axisViewBar];
     [self.view addSubview:self.axisViewLine];
+    [self.view addSubview:self.axisViewLineAndBar];
     [self setupSubviews];
     [self resetData];
 }
@@ -44,7 +44,7 @@ static CGFloat margin = 10;
 - (void)setupSubviews {
     self.axisViewLine.frame = CGRectMake(0, navHeight + margin, self.view.LC_width, (self.view.LC_height - navHeight - chartViewMargin - 4 * margin) / 2);
     self.resetDataButton.frame = CGRectMake(0, self.axisViewLine.LC_bottom + margin, self.axisViewLine.LC_width, chartViewMargin);
-    self.axisViewBar.frame = CGRectMake(0, self.resetDataButton.LC_bottom + margin, self.axisViewLine.LC_width, self.axisViewLine.LC_height);
+    self.axisViewLineAndBar.frame = CGRectMake(0, self.resetDataButton.LC_bottom + margin, self.axisViewLine.LC_width, self.axisViewLine.LC_height);
 }
 
 #pragma mark - reponse
@@ -55,18 +55,20 @@ static CGFloat margin = 10;
 
 - (void)resetData {
     if (isDouble) {
-        LCChartViewDataModel *model = [LCChartViewDataModel getModelWithChartColor:RandomColor plots:[self randomArrayWithCount:18]];
-        LCChartViewDataModel *model1 = [LCChartViewDataModel getModelWithChartColor:RandomColor plots:[self randomArrayWithCount:18]];
+        LCChartViewDataModel *model = [LCChartViewDataModel getModelWithLineColor:RandomColor BarColor:RandomColor plots:[self randomArrayWithCount:18]];
+        LCChartViewDataModel *model1 = [LCChartViewDataModel getModelWithLineColor:RandomColor BarColor:RandomColor plots:[self randomArrayWithCount:18]];
         self.axisViewLine.dataSource = @[model, model1];
         [self.axisViewLine drawChartView];
-        self.axisViewBar.dataSource = @[model, model1];
-        [self.axisViewBar drawChartView];
+        self.axisViewLineAndBar.dataSource = @[model, model1];
+        self.axisViewLineAndBar.showPlotsLabel = NO;
+        [self.axisViewLineAndBar drawChartView];
     } else {
-        LCChartViewDataModel *model = [LCChartViewDataModel getModelWithChartColor:RandomColor plots:[self randomArrayWithCount:18]];;
+        LCChartViewDataModel *model = [LCChartViewDataModel getModelWithLineColor:RandomColor BarColor:RandomColor plots:[self randomArrayWithCount:18]];
         self.axisViewLine.dataSource = @[model];
         [self.axisViewLine drawChartView];
-        self.axisViewBar.dataSource = @[model];
-        [self.axisViewBar drawChartView];
+        self.axisViewLineAndBar.dataSource = @[model];
+        self.axisViewLineAndBar.showPlotsLabel = NO;
+        [self.axisViewLineAndBar drawChartView];
     }
 }
 
@@ -89,17 +91,15 @@ static CGFloat margin = 10;
 - (LCChartView *)axisViewLine {
     if (!_axisViewLine) {
         _axisViewLine = [LCChartView getAxisViewLineWithYAxisMaxValue:1000];
-        _axisViewLine.chartViewType = LCChartViewTypeLine;
     }
     return _axisViewLine;
 }
 
-- (LCChartView *)axisViewBar {
-    if (!_axisViewBar) {
-        _axisViewBar = [LCChartView getAxisViewBarWithYAxisMaxValue:1000];
-        _axisViewLine.chartViewType = LCChartViewTypeBar;
+- (LCChartView *)axisViewLineAndBar {
+    if (!_axisViewLineAndBar) {
+        _axisViewLineAndBar = [LCChartView getAxisViewLineAndBarWithYAxisMaxValue:1000];
     }
-    return _axisViewBar;
+    return _axisViewLineAndBar;
 }
 
 - (UIButton *)resetDataButton {
