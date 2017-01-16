@@ -1,28 +1,30 @@
-# LCChartView
-快速展示折线图, 柱状图
+//
+//  LCChartView.h
+//  LCProject
+//
+//  Created by liangrongchang on 2017/1/6.
+//  Copyright © 2017年 Rochang. All rights reserved.
+//
 
-![LCChart.gif](https://github.com/Rochang/LCChartView/blob/master/LCChartView.gif)
-# 使用说明
-```obj
-/* 初始化 */
-LCAxisView *axisView = [LCAxisView getAxisViewLineWithYAxisMaxValue:1000];
-LCAxisView *axisView1 = [LCAxisView getAxisViewBarWithYAxisMaxValue:1000];
-LCAxisView *axisView2 = [[LCAxisView alloc] init];
+#import <UIKit/UIKit.h>
 
-/* 创建数据源 */
-LCAxisViewDataModel *model = [LCAxisViewDataModel getModelWithChartColor:RandomColor plots:[self randomArrayWithCount:18]];
-LCAxisViewDataModel *model1 = [LCAxisViewDataModel getModelWithChartColor:RandomColor plots:[self randomArrayWithCount:18]];
-// 单组数据展示
-axisView.dataSource = @[model];
-// 多组数据展示
-axisView1.dataSource = @[model, model1];
+typedef NS_ENUM(NSInteger, LCChartViewType) {
+    LCChartViewTypeLine,
+    LCChartViewTypeBar
+};
 
-/* 开始绘画 */
-[self.axisViewBar drawChartView];
-```
-# 自定义UI属性
-文件LCAxisView.h中保留了一堆属性用于自定义UI,如需修改直接在drawChartView方法前设置即可实现.
-```obj
+#pragma mark - 数据model
+@interface LCChartViewDataModel : NSObject
+
+@property (strong, nonatomic) UIColor *chartColor;
+@property (strong, nonatomic) NSArray <NSString *>*plots;
+@property (strong, nonatomic) NSMutableArray <UIButton *>*plotButtons;
++ (LCChartViewDataModel *)getModelWithChartColor:(UIColor *)color plots:(NSArray <NSString *>*)plots;
+
+@end
+
+@interface LCChartView : UIView
+
 // switch
 @property (assign, nonatomic) BOOL showGridding;
 @property (assign, nonatomic) BOOL showAnimation;
@@ -70,37 +72,33 @@ axisView1.dataSource = @[model, model1];
 // 或者图片
 @property (strong, nonatomic) NSString *plotsButtonImage;
 @property (strong, nonatomic) NSString *plotsButtonSelectedImage;
-```
-# 实现思路
-项目中只用了一对.h .m文件,为了增强阅读性,所有的方法已经细分.可以参考LCAxisView.m的mark.
-```obj
-#pragma mark - 开始描绘LCChartView
-- (void)drawChartView {
-}
-#pragma mark - 重置数据
-- (void)resetDataSource {
-}
-#pragma mark - 描绘Y轴
-- (void)drawYAxis {
-}
-#pragma mark - 描绘X轴
-- (void)drawXAxis {
-}
-#pragma mark - Y轴分割线
-- (void)drawYSeparators {
-}
-#pragma mark - X轴分割线
-- (void)drawXSeparators {
-}
-#pragma mark - 创建,显示数据label
-- (void)drawDisplayLabels {
-}
-#pragma mark - 描绘ChartViewLine折线图
-- (void)drawLineChartViewPots {
-}
-- (void)drawLineChartViewLines {
-}
-#pragma mark - ChartViewBar柱状图
-- (void)drawBarChartViewBars {
-}
-```
+
+/** 展示的数据点 */
+@property (strong, nonatomic) NSArray <LCChartViewDataModel *>*dataSource;
+
+/** 设置title属性Block */
+@property (copy, nonatomic) void(^comfigurateTitleLabel)(UILabel *);
+
+/** 设置yAxisLabel属性Block */
+@property (copy, nonatomic) void(^comfigurateYAxisLabel)(UILabel *);
+
+/** 设置xAxisLabel属性Block */
+@property (copy, nonatomic) void(^comfiguratexAxisLabel)(UILabel *);
+
+/** 设置yAxisTitleLabel属性Block */
+@property (copy, nonatomic) void(^comfigurateYAxisTitleLabel)(UILabel *);
+
+/** 设置xAxisTitleLabel属性Block */
+@property (copy, nonatomic) void(^comfigurateXAxisTitleLabel)(UILabel *);
+
+/** 设置xAxisTextMargin */
+- (void)setChartViewXAxisTextMargin:(CGFloat)xAxisTextMargin;
+
+/** 初始化 */
++ (instancetype)getAxisViewLineWithYAxisMaxValue:(CGFloat)yAxisMaxValue;
++ (instancetype)getAxisViewBarWithYAxisMaxValue:(CGFloat)yAxisMaxValue;
+
+/** 开始描绘LCChartView */
+- (void)drawChartView;
+
+@end
