@@ -373,7 +373,7 @@ static CGFloat xAxisMaxX = 0;
             if (self.chartViewType == LCChartViewTypeLine) {
                 label.LC_centerX = self.xAxisLabels[j].LC_centerX;
             }
-            else if (self.chartViewType == LCChartViewTypeLine || self.chartViewType == LCChartViewTypeLineAndBar) {
+            else if (self.chartViewType == LCChartViewTypeBar || self.chartViewType == LCChartViewTypeLineAndBar) {
                 if (self.dataSource.count == 1) {
                     label.LC_centerX = self.xAxisLabels[j].LC_centerX;
                 } else if (self.dataSource.count == 2) {
