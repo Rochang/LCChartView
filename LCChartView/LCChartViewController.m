@@ -7,23 +7,21 @@
 //
 
 #import "LCChartViewController.h"
-#import "UIView+LayoutMethods.h"
 #import "LCChartView.h"
-
-#define RandomColor [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1]
-#define RGB(r, g, b) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:1.0]
-#define LCBrown119                      RGB(119, 107, 95)
+#import "LCPieView.h"
+#import "LCArcView.h"
+#import "UIView+LCLayout.h"
 
 static BOOL isDouble = YES;
-static CGFloat navHeight = 64;
-static CGFloat chartViewMargin = 40;
-static CGFloat margin = 10;
+#define RandomColor [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1]
 
 @interface LCChartViewController ()
 
-@property (strong, nonatomic) LCChartView *axisViewLine;
-@property (strong, nonatomic) LCChartView *axisViewLineAndBar;
-@property (strong, nonatomic) UIButton *resetDataButton;
+@property (nonatomic, strong) UIScrollView *contentView;
+@property (strong, nonatomic) LCChartView *chartViewLine;
+@property (strong, nonatomic) LCChartView *chartViewBar;
+@property (strong, nonatomic) LCPieView *pieView;
+@property (nonatomic, strong) LCArcView *arcView;
 
 @end
 
@@ -31,20 +29,17 @@ static CGFloat margin = 10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"🌍_LCChartView";
-    self.view.backgroundColor = LCBrown119;
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.navigationItem.title = @"LCChartView";
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupNavBar];
-    [self.view addSubview:self.resetDataButton];
-    [self.view addSubview:self.axisViewLine];
-    [self.view addSubview:self.axisViewLineAndBar];
-    [self setupSubviews];
+    [self.view addSubview:self.contentView];
+    [self.contentView addSubview:self.chartViewLine];
+    [self.contentView addSubview:self.chartViewBar];
+    [self.contentView addSubview:self.pieView];
+    [self.contentView addSubview:self.arcView];
     [self resetData];
-}
-
-- (void)setupSubviews {
-    self.axisViewLine.frame = CGRectMake(0, navHeight + margin, self.view.LC_width, (self.view.LC_height - navHeight - chartViewMargin - 4 * margin) / 2);
-    self.resetDataButton.frame = CGRectMake(0, self.axisViewLine.LC_bottom + margin, self.axisViewLine.LC_width, chartViewMargin);
-    self.axisViewLineAndBar.frame = CGRectMake(0, self.resetDataButton.LC_bottom + margin, self.axisViewLine.LC_width, self.axisViewLine.LC_height);
+    self.contentView.contentSize = CGSizeMake(0, self.arcView.LC_bottom + 50);
 }
 
 #pragma mark - reponse
@@ -55,32 +50,44 @@ static CGFloat margin = 10;
 
 - (void)resetData {
     if (isDouble) {
-        LCChartViewDataModel *model = [LCChartViewDataModel getModelWithLineColor:RandomColor BarColor:RandomColor plots:[self randomArrayWithCount:18]];
-        LCChartViewDataModel *model1 = [LCChartViewDataModel getModelWithLineColor:RandomColor BarColor:RandomColor plots:[self randomArrayWithCount:18]];
-        self.axisViewLine.dataSource = @[model, model1];
-        [self.axisViewLine drawChartView];
-        self.axisViewLineAndBar.dataSource = @[model, model1];
-        self.axisViewLineAndBar.showPlotsLabel = NO;
-        [self.axisViewLineAndBar drawChartView];
+        LCChartViewModel *model = [LCChartViewModel modelWithColor:RandomColor plots:[self randomArrayWithCount:12] project:@"1组"];
+        LCChartViewModel *model1 = [LCChartViewModel modelWithColor:RandomColor plots:[self randomArrayWithCount:12] project:@"2组"];
+        LCChartViewModel *model2 = [LCChartViewModel modelWithColor:RandomColor plots:[self randomArrayWithCount:12] project:@"3组"];
+        LCChartViewModel *model3 = [LCChartViewModel modelWithColor:RandomColor plots:[self randomArrayWithCount:12] project:@"4组"];
+        LCChartViewModel *model4 = [LCChartViewModel modelWithColor:RandomColor plots:[self randomArrayWithCount:12] project:@"5组"];
+        NSArray *dataSource = @[model, model1, model2, model3, model4];
+        self.chartViewLine.title = @"折线图";
+        [self.chartViewLine showChartViewWithYAxisMaxValue:1000 dataSource:@[model, model1]];
+        
+        self.chartViewBar.title = @"柱状图";
+        [self.chartViewBar showChartViewWithYAxisMaxValue:1000 dataSource:dataSource];
+        
     } else {
-        LCChartViewDataModel *model = [LCChartViewDataModel getModelWithLineColor:RandomColor BarColor:RandomColor plots:[self randomArrayWithCount:18]];
-        self.axisViewLine.dataSource = @[model];
-        [self.axisViewLine drawChartView];
-        self.axisViewLineAndBar.dataSource = @[model];
-        self.axisViewLineAndBar.showPlotsLabel = NO;
-        [self.axisViewLineAndBar drawChartView];
+        LCChartViewModel *model = [LCChartViewModel modelWithColor:RandomColor plots:[self randomArrayWithCount:12] project:@"单组"];
+        [self.chartViewLine showChartViewWithYAxisMaxValue:1000 dataSource:@[model]];
+        
+        [self.chartViewBar showChartViewWithYAxisMaxValue:1000 dataSource:@[model]];
     }
+    
+    LCPieViewModel *modelP0 = [LCPieViewModel modelWithValue:arc4random_uniform(100) color:[UIColor redColor] text:@"1组"];
+    LCPieViewModel *modelP1 = [LCPieViewModel modelWithValue:arc4random_uniform(100) color:[UIColor grayColor] text:@"2组"];
+    LCPieViewModel *modelP2 = [LCPieViewModel modelWithValue:arc4random_uniform(100) color:[UIColor blueColor] text:@"3组"];
+    self.pieView.dataSource = @[modelP0, modelP1, modelP2];
+    [self.pieView showPieView];
+    
+    [self.arcView showArcViewWithBgStartAngle:0 endBgAngle:M_PI * 2 bgAnimation:NO StartAngle:0 endAngle:M_PI animaion:YES];
+    
 }
 
 #pragma mark - private mothed
 - (void)setupNavBar {
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"切换单双" style:UIBarButtonItemStylePlain target:self action:@selector(exchange)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"刷新数据" style:UIBarButtonItemStylePlain target:self action:@selector(exchange)];
 }
 
 - (NSArray *)randomArrayWithCount:(NSInteger)dataCounts {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (int i = 0; i < dataCounts; i++) {
-        NSNumber *number = [NSNumber numberWithInt:arc4random_uniform(1000)];
+        NSString *number = [NSString stringWithFormat:@"%d",arc4random_uniform(1000)];
         [array addObject:number];
     }
     return array.copy;
@@ -88,29 +95,41 @@ static CGFloat margin = 10;
 
 
 #pragma mark - getter
-- (LCChartView *)axisViewLine {
-    if (!_axisViewLine) {
-        _axisViewLine = [LCChartView getAxisViewLineWithYAxisMaxValue:1000];
+- (LCChartView *)chartViewLine {
+    if (!_chartViewLine) {
+        _chartViewLine = [LCChartView chartViewWithType:LCChartViewTypeLine];
+        _chartViewLine.frame = CGRectMake(0, 64, self.view.LC_width, 250);
     }
-    return _axisViewLine;
+    return _chartViewLine;
 }
 
-- (LCChartView *)axisViewLineAndBar {
-    if (!_axisViewLineAndBar) {
-        _axisViewLineAndBar = [LCChartView getAxisViewLineAndBarWithYAxisMaxValue:1000];
+- (LCChartView *)chartViewBar {
+    if (!_chartViewBar) {
+        _chartViewBar = [[LCChartView alloc] initWithFrame:CGRectMake(0, 350, self.view.LC_width, 250) chartViewType:LCChartViewTypeBar];
     }
-    return _axisViewLineAndBar;
+    return _chartViewBar;
 }
 
-- (UIButton *)resetDataButton {
-    if (!_resetDataButton) {
-        _resetDataButton = [[UIButton alloc] init];
-        _resetDataButton.backgroundColor = [UIColor redColor];
-        [_resetDataButton setTitle:@"随机数据,颜色" forState:UIControlStateNormal];
-        _resetDataButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_resetDataButton addTarget:self action:@selector(resetData) forControlEvents:UIControlEventTouchUpInside];
+- (LCPieView *)pieView {
+    if (!_pieView) {
+        _pieView = [LCPieView pieView];
+        _pieView.frame = CGRectMake(0, 650, self.view.LC_width, 200);
     }
-    return _resetDataButton;
+    return _pieView;
+}
+
+- (LCArcView *)arcView {
+    if (!_arcView) {
+        _arcView = [[LCArcView alloc] initWithFrame:CGRectMake(0, 900, self.view.LC_width, 150)];
+    }
+    return _arcView;
+}
+
+- (UIScrollView *)contentView {
+    if (!_contentView) {
+        _contentView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.LC_width, self.view.LC_height - 49)];
+    }
+    return _contentView;
 }
 
 @end

@@ -7,20 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A32F72851E28DD9D0078CAC5 /* LCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = A32F72841E28DD9D0078CAC5 /* LCChartView.m */; };
-		A32F72891E28DDF00078CAC5 /* UIView+LayoutMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = A32F72881E28DDF00078CAC5 /* UIView+LayoutMethods.m */; };
 		A32F728F1E28DE930078CAC5 /* LCChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A32F728E1E28DE930078CAC5 /* LCChartViewController.m */; };
 		A331535F1E28D9F300A9281C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A331535E1E28D9F300A9281C /* main.m */; };
 		A33153621E28D9F300A9281C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A33153611E28D9F300A9281C /* AppDelegate.m */; };
 		A331536A1E28D9F300A9281C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A33153691E28D9F300A9281C /* Assets.xcassets */; };
 		A331536D1E28D9F300A9281C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A331536B1E28D9F300A9281C /* LaunchScreen.storyboard */; };
+		A3D114BB1F32C40B0062EDEE /* UIView+LCLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114BA1F32C40B0062EDEE /* UIView+LCLayout.m */; };
+		A3D114C71F32C43D0062EDEE /* LCArcView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114BE1F32C43D0062EDEE /* LCArcView.m */; };
+		A3D114C81F32C43D0062EDEE /* LCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114C01F32C43D0062EDEE /* LCChartView.m */; };
+		A3D114C91F32C43D0062EDEE /* LCChartViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114C21F32C43D0062EDEE /* LCChartViewModel.m */; };
+		A3D114CA1F32C43D0062EDEE /* LCPieView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114C41F32C43D0062EDEE /* LCPieView.m */; };
+		A3D114CB1F32C43D0062EDEE /* LCPieViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114C61F32C43D0062EDEE /* LCPieViewModel.m */; };
+		A3D114CE1F32C52B0062EDEE /* LCMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D114CD1F32C52B0062EDEE /* LCMethod.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A32F72831E28DD9D0078CAC5 /* LCChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCChartView.h; sourceTree = "<group>"; };
-		A32F72841E28DD9D0078CAC5 /* LCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCChartView.m; sourceTree = "<group>"; };
-		A32F72871E28DDF00078CAC5 /* UIView+LayoutMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LayoutMethods.h"; sourceTree = "<group>"; };
-		A32F72881E28DDF00078CAC5 /* UIView+LayoutMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LayoutMethods.m"; sourceTree = "<group>"; };
 		A32F728D1E28DE930078CAC5 /* LCChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCChartViewController.h; sourceTree = "<group>"; };
 		A32F728E1E28DE930078CAC5 /* LCChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCChartViewController.m; sourceTree = "<group>"; };
 		A331535A1E28D9F300A9281C /* LCChartView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LCChartView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +31,20 @@
 		A33153691E28D9F300A9281C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A331536C1E28D9F300A9281C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A331536E1E28D9F300A9281C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3D114B91F32C40B0062EDEE /* UIView+LCLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LCLayout.h"; sourceTree = "<group>"; };
+		A3D114BA1F32C40B0062EDEE /* UIView+LCLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LCLayout.m"; sourceTree = "<group>"; };
+		A3D114BD1F32C43D0062EDEE /* LCArcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCArcView.h; sourceTree = "<group>"; };
+		A3D114BE1F32C43D0062EDEE /* LCArcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCArcView.m; sourceTree = "<group>"; };
+		A3D114BF1F32C43D0062EDEE /* LCChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCChartView.h; sourceTree = "<group>"; };
+		A3D114C01F32C43D0062EDEE /* LCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCChartView.m; sourceTree = "<group>"; };
+		A3D114C11F32C43D0062EDEE /* LCChartViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCChartViewModel.h; sourceTree = "<group>"; };
+		A3D114C21F32C43D0062EDEE /* LCChartViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCChartViewModel.m; sourceTree = "<group>"; };
+		A3D114C31F32C43D0062EDEE /* LCPieView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCPieView.h; sourceTree = "<group>"; };
+		A3D114C41F32C43D0062EDEE /* LCPieView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCPieView.m; sourceTree = "<group>"; };
+		A3D114C51F32C43D0062EDEE /* LCPieViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCPieViewModel.h; sourceTree = "<group>"; };
+		A3D114C61F32C43D0062EDEE /* LCPieViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCPieViewModel.m; sourceTree = "<group>"; };
+		A3D114CC1F32C52B0062EDEE /* LCMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMethod.h; sourceTree = "<group>"; };
+		A3D114CD1F32C52B0062EDEE /* LCMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCMethod.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,24 +58,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A32F72821E28DD9D0078CAC5 /* LCChartView */ = {
-			isa = PBXGroup;
-			children = (
-				A32F72831E28DD9D0078CAC5 /* LCChartView.h */,
-				A32F72841E28DD9D0078CAC5 /* LCChartView.m */,
-			);
-			path = LCChartView;
-			sourceTree = "<group>";
-		};
-		A32F72861E28DDF00078CAC5 /* UIView+LayoutMethods */ = {
-			isa = PBXGroup;
-			children = (
-				A32F72871E28DDF00078CAC5 /* UIView+LayoutMethods.h */,
-				A32F72881E28DDF00078CAC5 /* UIView+LayoutMethods.m */,
-			);
-			path = "UIView+LayoutMethods";
-			sourceTree = "<group>";
-		};
 		A33153511E28D9F300A9281C = {
 			isa = PBXGroup;
 			children = (
@@ -80,8 +77,9 @@
 		A331535C1E28D9F300A9281C /* LCChartView */ = {
 			isa = PBXGroup;
 			children = (
-				A32F72861E28DDF00078CAC5 /* UIView+LayoutMethods */,
-				A32F72821E28DD9D0078CAC5 /* LCChartView */,
+				A3D114B91F32C40B0062EDEE /* UIView+LCLayout.h */,
+				A3D114BA1F32C40B0062EDEE /* UIView+LCLayout.m */,
+				A3D114BC1F32C43D0062EDEE /* LCChartView */,
 				A33153601E28D9F300A9281C /* AppDelegate.h */,
 				A33153611E28D9F300A9281C /* AppDelegate.m */,
 				A32F728D1E28DE930078CAC5 /* LCChartViewController.h */,
@@ -100,6 +98,25 @@
 				A331535E1E28D9F300A9281C /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A3D114BC1F32C43D0062EDEE /* LCChartView */ = {
+			isa = PBXGroup;
+			children = (
+				A3D114BD1F32C43D0062EDEE /* LCArcView.h */,
+				A3D114BE1F32C43D0062EDEE /* LCArcView.m */,
+				A3D114BF1F32C43D0062EDEE /* LCChartView.h */,
+				A3D114C01F32C43D0062EDEE /* LCChartView.m */,
+				A3D114C11F32C43D0062EDEE /* LCChartViewModel.h */,
+				A3D114C21F32C43D0062EDEE /* LCChartViewModel.m */,
+				A3D114C31F32C43D0062EDEE /* LCPieView.h */,
+				A3D114C41F32C43D0062EDEE /* LCPieView.m */,
+				A3D114C51F32C43D0062EDEE /* LCPieViewModel.h */,
+				A3D114C61F32C43D0062EDEE /* LCPieViewModel.m */,
+				A3D114CC1F32C52B0062EDEE /* LCMethod.h */,
+				A3D114CD1F32C52B0062EDEE /* LCMethod.m */,
+			);
+			path = LCChartView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,11 +190,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A32F72891E28DDF00078CAC5 /* UIView+LayoutMethods.m in Sources */,
+				A3D114C91F32C43D0062EDEE /* LCChartViewModel.m in Sources */,
+				A3D114C81F32C43D0062EDEE /* LCChartView.m in Sources */,
+				A3D114BB1F32C40B0062EDEE /* UIView+LCLayout.m in Sources */,
+				A3D114CE1F32C52B0062EDEE /* LCMethod.m in Sources */,
 				A33153621E28D9F300A9281C /* AppDelegate.m in Sources */,
-				A32F72851E28DD9D0078CAC5 /* LCChartView.m in Sources */,
+				A3D114C71F32C43D0062EDEE /* LCArcView.m in Sources */,
 				A32F728F1E28DE930078CAC5 /* LCChartViewController.m in Sources */,
+				A3D114CA1F32C43D0062EDEE /* LCPieView.m in Sources */,
 				A331535F1E28D9F300A9281C /* main.m in Sources */,
+				A3D114CB1F32C43D0062EDEE /* LCPieViewModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
