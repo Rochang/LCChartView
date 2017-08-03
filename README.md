@@ -1,5 +1,10 @@
 # LCChartView
 快速展示折线图, 柱状图, 饼状图, 环形图, 其中折线图、柱状图支持tap缩放, pan缩放. 
+![arc.gif](https://github.com/Rochang/LCChartView/blob/master/line.gif)
+![arc.gif](https://github.com/Rochang/LCChartView/blob/master/bar.gif)
+![arc.gif](https://github.com/Rochang/LCChartView/blob/master/pie.gif)
+![arc.gif](https://github.com/Rochang/LCChartView/blob/master/arc.gif)
+
 
 # 使用说明
 ```obj
