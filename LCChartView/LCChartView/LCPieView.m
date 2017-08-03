@@ -16,6 +16,7 @@
 @property (nonatomic, strong) CAShapeLayer *touchLayer;
 @property (nonatomic, strong) NSMutableArray <UILabel *>*textLabels;
 @property (strong, nonatomic) UIScrollView *noteView;
+@property (nonatomic, strong) NSArray <LCPieViewModel *>*dataSource;
 
 @end
 

@@ -11,7 +11,6 @@
 
 @interface LCPieView : UIView
 
-@property (nonatomic, strong) NSArray <LCPieViewModel *>*dataSource;
 @property (nonatomic, assign) CGFloat arcWidth;
 @property (nonatomic, assign) CGFloat outerArcRadius;
 @property (nonatomic, assign) NSTimeInterval duration;
@@ -27,7 +26,6 @@
 
 + (instancetype)pieView;
 
-- (void)showPieView;
 - (void)showPieViewWithDataSource:(NSArray <LCPieViewModel *>*)dataSource;
 
 @end

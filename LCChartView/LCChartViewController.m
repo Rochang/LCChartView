@@ -72,8 +72,7 @@ static BOOL isDouble = YES;
     LCPieViewModel *modelP0 = [LCPieViewModel modelWithValue:arc4random_uniform(100) color:[UIColor redColor] text:@"1组"];
     LCPieViewModel *modelP1 = [LCPieViewModel modelWithValue:arc4random_uniform(100) color:[UIColor grayColor] text:@"2组"];
     LCPieViewModel *modelP2 = [LCPieViewModel modelWithValue:arc4random_uniform(100) color:[UIColor blueColor] text:@"3组"];
-    self.pieView.dataSource = @[modelP0, modelP1, modelP2];
-    [self.pieView showPieView];
+    [self.pieView showPieViewWithDataSource:@[modelP0, modelP1, modelP2]];
     
     [self.arcView showArcViewWithBgStartAngle:0 endBgAngle:M_PI * 2 bgAnimation:NO StartAngle:0 endAngle:M_PI animaion:YES];
     
